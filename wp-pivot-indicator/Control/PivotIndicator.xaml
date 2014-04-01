@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="Japf.PivotIndicatorDemo.Control.PivotIndicator"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:panels="clr-namespace:Japf.PivotIndicatorDemo.Control" 
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    x:Name="pivotIndicator"
+    d:DesignHeight="80" d:DesignWidth="480">
+        
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ItemsControl
+            x:Name="itemscontrol"
+            Grid.Row="0"
+            ItemsSource="{Binding ElementName=pivotIndicator, Path=Pivot.ItemsSource}"
+            ItemTemplate="{Binding ElementName=pivotIndicator, Path=HeaderTemplate}"
+            CacheMode="BitmapCache"
+            Tap="OnTap">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <panels:SplitPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+        <Rectangle
+            Grid.Row="1"
+            Fill="LightGray"
+            Height="1"
+            Margin="0,-3,0,0"/>
+
+        <panels:PivotRectangle
+            x:Name="pivotRectangle"
+            Grid.Row="1"
+            Margin="0,-2,0,0"
+            Foreground="{StaticResource PhoneAccentBrush}"
+            ItemsCount="{Binding ElementName=pivotIndicator, Path=Pivot.Items.Count}"
+            SelectedIndex="{Binding ElementName=pivotIndicator, Path=Pivot.SelectedIndex}"
+            Height="5"/>
+            
+    </Grid>
+</UserControl>
