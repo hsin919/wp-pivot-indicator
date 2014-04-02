@@ -10,11 +10,11 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     x:Name="pivotIndicator"
     d:DesignHeight="80" d:DesignWidth="480">
-        
-    <Grid x:Name="LayoutRoot">
+
+    <Grid x:Name="LayoutRoot" Height="{Binding ElementName=pivotIndicator, Path=Height}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="{Binding ElementName=pivotIndicator, Path=Height}"/>
+            
         </Grid.RowDefinitions>
 
         <ItemsControl
@@ -31,20 +31,19 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
 
-        <Rectangle
-            Grid.Row="1"
-            Fill="LightGray"
-            Height="1"
-            Margin="0,-3,0,0"/>
-
         <panels:PivotRectangle
             x:Name="pivotRectangle"
-            Grid.Row="1"
-            Margin="0,-2,0,0"
-            Foreground="{StaticResource PhoneAccentBrush}"
+            Grid.Row="0"
+            IndicatorForeground ="{Binding ElementName=pivotIndicator, Path=IndicatorForeground}"
+            IndicatorBackgroundFill="{Binding ElementName=pivotIndicator, Path=IndicatorBackgroundFill}"
+            IndicatorBackgroundStroke="{Binding ElementName=pivotIndicator, Path=IndicatorBackgroundStroke}"
+            indicateWidth="{Binding ElementName=pivotIndicator, Path=indicateWidth}"
+            Margin="0,0,0,0"
+            Foreground="{Binding ElementName=pivotIndicator, Path=Foreground}"
             ItemsCount="{Binding ElementName=pivotIndicator, Path=Pivot.Items.Count}"
             SelectedIndex="{Binding ElementName=pivotIndicator, Path=Pivot.SelectedIndex}"
-            Height="5"/>
+            Height="{Binding ElementName=pivotIndicator, Path=Height}" 
+            Width="{Binding ElementName=pivotIndicator, Path=Width}"/>
             
     </Grid>
 </UserControl>

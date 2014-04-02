@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 
 namespace Japf.PivotIndicatorDemo.Control
 {
@@ -14,7 +15,79 @@ namespace Japf.PivotIndicatorDemo.Control
         private readonly Canvas canvas;
         private readonly DoubleAnimation animation;
         private readonly Storyboard storyboard;
-        private Border border;
+        private StackPanel border;
+        /*
+        public static readonly DependencyProperty IndicatorForegroundProperty = DependencyProperty.Register(
+            "IndicatorForegroundColor",
+            typeof(Color),
+            typeof(PivotRectangle),
+            new PropertyMetadata(1, new PropertyChangedCallback(OnPivotPropertyChanged)));
+        public Color IndicatorForegroundColor { get; set; }*/
+
+        public static readonly DependencyProperty IndicatorForegroundProperty = DependencyProperty.Register(
+            "IndicatorForeground", typeof(Brush),
+            typeof(PivotRectangle),
+            //, null
+            new PropertyMetadata(new PropertyChangedCallback(OnPivotPropertyChanged)) //"Black",new PropertyChangedCallback(
+        );
+        public Brush IndicatorForeground
+        {
+            get
+            {
+                return base.GetValue(IndicatorForegroundProperty) as Brush;
+            }
+            set
+            {
+                base.SetValue(IndicatorForegroundProperty, value);
+            }
+        }
+
+        public static readonly DependencyProperty IndicatorBackgroundFillProperty = DependencyProperty.Register(
+            "IndicatorBackgroundFill", typeof(Brush),
+            typeof(PivotRectangle),
+            //, null
+            new PropertyMetadata(new PropertyChangedCallback(OnPivotPropertyChanged)) //"Black",new PropertyChangedCallback(
+        );
+        public Brush IndicatorBackgroundFill
+        {
+            get
+            {
+                return base.GetValue(IndicatorBackgroundFillProperty) as Brush;
+            }
+            set
+            {
+                base.SetValue(IndicatorBackgroundFillProperty, value);
+            }
+        }
+
+        public static readonly DependencyProperty IndicatorBackgroundStrokeProperty = DependencyProperty.Register(
+            "IndicatorBackgroundStroke", typeof(Brush),
+            typeof(PivotRectangle),
+            //, null
+            new PropertyMetadata(new PropertyChangedCallback(OnPivotPropertyChanged)) //"Black",new PropertyChangedCallback(
+        );
+        public Brush IndicatorBackgroundStroke
+        {
+            get
+            {
+                return base.GetValue(IndicatorBackgroundStrokeProperty) as Brush;
+            }
+            set
+            {
+                base.SetValue(IndicatorBackgroundStrokeProperty, value);
+            }
+        }
+
+        public static readonly DependencyProperty indicateWidthProperty = DependencyProperty.Register(
+            "indicateWidth",
+            typeof(int),
+            typeof(PivotRectangle),
+            new PropertyMetadata(1, new PropertyChangedCallback(OnPivotPropertyChanged)));
+        public int indicateWidth
+        {
+            get { return (int)this.GetValue(indicateWidthProperty); }
+            set { this.SetValue(indicateWidthProperty, value); }
+        }
 
         public int SelectedIndex
         {
@@ -59,6 +132,10 @@ namespace Japf.PivotIndicatorDemo.Control
             this.storyboard.Children.Add(this.animation);
 
             this.Loaded += new RoutedEventHandler(this.OnCurrentPivotIndicatorLoaded);
+
+            IndicatorForeground = new SolidColorBrush(Colors.Transparent);
+            IndicatorBackgroundFill = new SolidColorBrush(Colors.Transparent);
+            IndicatorBackgroundStroke = new SolidColorBrush(Colors.Transparent);
         }
 
         private void OnCurrentPivotIndicatorLoaded(object sender, RoutedEventArgs e)
@@ -76,16 +153,53 @@ namespace Japf.PivotIndicatorDemo.Control
             this.canvas.Children.Clear();
 
             var translateTransform = new TranslateTransform();
-            this.border = new Border
+
+            int itemNum = (int)this.ItemsCount;
+
+            for(int i = 0 ; i < itemNum ; i++)
+            {
+                Ellipse grayEllipse = new Ellipse
+                {
+                    Width = indicateWidth - 1,//(int)(actualWidth / ((double)this.ItemsCount)),
+                    Height = indicateWidth - 1,
+                    StrokeThickness = 1,
+                    Stroke = IndicatorBackgroundStroke,
+                    Fill = IndicatorBackgroundFill,
+                };
+                int unitWidth = (int)(actualWidth / ((double)this.ItemsCount));
+                int marginEllipse = (int)indicateWidth - 1;
+                if(marginEllipse < unitWidth)
+                {
+                    marginEllipse = (unitWidth - marginEllipse)/2;
+                }
+                double left = i * unitWidth + marginEllipse;
+                double top = 0;
+
+                grayEllipse.Margin = new Thickness(left, top, 0, 0);
+                canvas.Children.Add(grayEllipse);
+            }
+
+            this.border = new StackPanel
                 {
                     Width = (int)(actualWidth / ((double)this.ItemsCount)),
                     Height = actualHeight,
-                    BorderBrush = base.Foreground,
-                    BorderThickness = new Thickness(0.0, actualHeight, 0.0, 0.0),
+                    //BorderBrush = base.Foreground,
+                    //BorderThickness = new Thickness(0.0, actualHeight, 0.0, 0.0),
                     RenderTransform = translateTransform,
                     CacheMode = new BitmapCache()
                 };
 
+            //SolidColorBrush IndicatorSolidColorBrush = new SolidColorBrush();
+            //IndicatorSolidColorBrush.Color = IndicatorForegroundColor;
+            Ellipse myEllipse = new Ellipse
+            {
+                Width = indicateWidth,//(int)(actualWidth / ((double)this.ItemsCount)),
+                Height = indicateWidth,
+                Fill = IndicatorForeground,
+                StrokeThickness = 2,
+                Stroke = IndicatorForeground,
+            };
+            border.Children.Add(myEllipse);
             this.storyboard.Stop();
             
             // animate TranlateTransform.X property
@@ -120,6 +234,11 @@ namespace Japf.PivotIndicatorDemo.Control
             this.RebuildIndicator();
         }
 
+        private void OnPivotPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            this.RebuildIndicator();
+        }
+
         private static void OnSelectedIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((PivotRectangle)d).OnSelectedIndexChanged(e);
@@ -128,6 +247,11 @@ namespace Japf.PivotIndicatorDemo.Control
         private static void OnItemsCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((PivotRectangle)d).OnItemsCountChanged(e);
+        }
+
+        private static void OnPivotPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((PivotRectangle)d).OnPivotPropertyChanged(e);
         }
     }
 }

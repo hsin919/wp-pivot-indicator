@@ -15,6 +15,10 @@ namespace Japf.PivotIndicatorDemo.ViewModel
                                       new PivotItemViewModel("content 3", "item 3"),
                                       new PivotItemViewModel("content 4", "item 4"),
                                       new PivotItemViewModel("content 5", "item 5"),
+                                      new PivotItemViewModel("content 6", "item 6"),
+                                      new PivotItemViewModel("content 7", "item 7"),
+                                      new PivotItemViewModel("content 8", "item 8"),
+                                      new PivotItemViewModel("content 9", "item 9"),
                                   };
         }
 
