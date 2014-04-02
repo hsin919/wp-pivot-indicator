@@ -1,7 +1,7 @@
 #wp-pivot-indicator
 ==================
 
-An iOS pagecontrol like object based on [Jeremy's](https://github.com/japf/wp-pivot-indicator) excellent works.
+An iOS UIPageControl like object based on [Jeremy's](https://github.com/japf/wp-pivot-indicator) excellent works.
 Here is the snapshot of my works.
 
 ![Screenshot](https://www.evernote.com/shard/s90/sh/bb1f52b5-b532-43f2-a93f-992ed3e5abed/ced52ea1aa3cae9e3f09f4b8b3b61cf2/res/51d55271-684a-4d1a-91ed-69c74a390620/wp_ss_20140324_0001.png?resizeSmall&width=832)
