@@ -145,6 +145,12 @@ namespace Japf.PivotIndicatorDemo.Control
 
         private void RebuildIndicator()
         {
+            int itemNum = (int)this.ItemsCount;
+            if (itemNum == 0)
+            {
+                return;
+            }
+
             double actualWidth = base.ActualWidth;
             double actualHeight = base.ActualHeight;
             
@@ -154,15 +160,13 @@ namespace Japf.PivotIndicatorDemo.Control
 
             var translateTransform = new TranslateTransform();
 
-            int itemNum = (int)this.ItemsCount;
-
             for(int i = 0 ; i < itemNum ; i++)
             {
                 Ellipse grayEllipse = new Ellipse
                 {
                     Width = indicateWidth - 1,//(int)(actualWidth / ((double)this.ItemsCount)),
                     Height = indicateWidth - 1,
-                    StrokeThickness = 1,
+                    StrokeThickness = 2,
                     Stroke = IndicatorBackgroundStroke,
                     Fill = IndicatorBackgroundFill,
                 };
